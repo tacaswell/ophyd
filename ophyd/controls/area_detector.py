@@ -51,22 +51,22 @@ class AreaDetector(SignalDetector):
         self._take_darkfield = False
 
         # Setup signals on camera
-        self.add_signal(self._ad_signal('cam1:Acquire', '_acquire',
+        self.add_signal(self._ad_signal('Acquire', '_acquire',
                                         recordable=False))
-        self.add_signal(self._ad_signal('cam1:ImageMode', '_image_mode',
+        self.add_signal(self._ad_signal('ImageMode', '_image_mode',
                                         recordable=False))
-        self.add_signal(self._ad_signal('cam1:AcquireTime', '_acquire_time'),
+        self.add_signal(self._ad_signal('AcquireTime', '_acquire_time'),
                         add_property=True)
-        self.add_signal(self._ad_signal('cam1:AcquirePeriod',
+        self.add_signal(self._ad_signal('AcquirePeriod',
                                         '_acquire_period'),
                         add_property=True)
-        self.add_signal(self._ad_signal('cam1:NumImages', '_num_images',
+        self.add_signal(self._ad_signal('NumImages', '_num_images',
                                         recordable=False),
                         add_property=True)
-        self.add_signal(self._ad_signal('cam1:NumExposures', '_num_exposures',
+        self.add_signal(self._ad_signal('NumExposures', '_num_exposures',
                                         recordable=False),
                         add_property=True)
-        self.add_signal(self._ad_signal('cam1:ArrayCounter', '_array_counter',
+        self.add_signal(self._ad_signal('ArrayCounter', '_array_counter',
                                         recordable=False))
 
         self._use_stats = bool(stats)
