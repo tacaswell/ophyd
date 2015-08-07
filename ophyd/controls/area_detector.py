@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 import filestore.api as fs
 import uuid
+import time as ttime
 
 
 class AreaDetector(SignalDetector):
@@ -525,17 +526,9 @@ class AreaDetectorFileStoreHDF5(AreaDetectorFSBulkEntry):
                                    {'frame_per_point':
                                     self._num_images.value})
 
-    def _captured_changed(self, value, *args, **kwargs):
-        if value == self._total_images:
-            self._num_captured.clear_sub(self._captured_changed)
-
-            # Close the capture plugin (closes the file)
-
-            self._capture.put(0, wait=True)
-
     def deconfigure(self, *args, **kwargs):
-        self._total_images = self._array_counter.value
-        self._num_captured.subscribe(self._captured_changed)
+        while self._num_captured.value < self._array_counter.value:
+            ttime.sleep(.1)
 
         super(AreaDetectorFileStoreHDF5, self).deconfigure(*args, **kwargs)
 
