@@ -11,7 +11,6 @@ import traceback
 
 from IPython.utils.coloransi import TermColors as tc
 from matplotlib.cbook import CallbackRegistry
-from mongoengine import DoesNotExist
 
 from .runengine import RunEngine
 from .session import get_session_manager
