@@ -122,7 +122,7 @@ class OphydObject:
         for cb in self._subs[sub_type]:
             self._run_sub(cb, *args, **kwargs)
 
-    def subscribe(self, cb, event_type=None, run=True):
+    def subscribe(self, cb, *, event_type=None, run=True):
         '''Subscribe to events this signal group emits
 
         See also :func:`clear_sub`
