@@ -84,7 +84,10 @@ class DetectorBase(ADBase):
         # walk the tree from top to bottom
         plugins = OrderedDict()
         for name in nx.topological_sort(g):
-            plugins[name] = port_map[name]
+            try:
+                plugins[name] = port_map[name]
+            except KeyError:
+                raise RuntimeError('invalid port {name}'.format(name=name))
 
         # disable all of the and cache current enable state
         previous_enable_values = {}
