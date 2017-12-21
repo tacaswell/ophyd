@@ -76,8 +76,7 @@ class DetectorBase(ADBase):
         return dict(shape=shape, source=source, dtype='array',
                     external='FILESTORE:')
 
-    def stage(self, *args, **kwargs):
-        from threading import Event
+    def _ordered_plugins(self):
         # get ready to drain the queues
         g, port_map = self.get_asyn_digraph(enable_rule=EnableRule.ENABLE)
 
@@ -88,7 +87,14 @@ class DetectorBase(ADBase):
                 plugins[name] = port_map[name]
             except KeyError:
                 raise RuntimeError('invalid port {name}'.format(name=name))
+        return plugins
 
+    def stage(self, *args, **kwargs):
+        try:
+            plugins = self._ordered_plugins()
+        except Exception:
+            self.unstage()
+            raise
         # disable all of the and cache current enable state
         previous_enable_values = {}
         for cpt in plugins.values():
@@ -96,27 +102,12 @@ class DetectorBase(ADBase):
                 previous_enable_values[cpt.enable] = cpt.enable.get()
                 set_and_wait(cpt.enable, 0)
 
-        # find anything that is not at 0 queue usage and install callbacks
-        need_draining = {cpt
+        # try to drain everything
+        need_draining = [cpt
                          for cpt in plugins.values()
-                         if (hasattr(cpt, 'queue_use') and
-                             cpt.queue_use.get() > 0)}
-        drain_events = {}
+                         if hasattr(cpt, 'queue_use')]
 
-        for cpt in need_draining:
-            ev = Event()
-            drain_events
-            cid = cpt.queue_use.subscribe(
-                lambda value, _evt=ev, **kwargs:
-                ev.set()
-                if value == 0 else None)
-
-            drain_events[ev] = (cid, cpt)
-
-        # wait for all queues to drain to 0
-        for ev, (cid, cpt) in drain_events.items():
-            ev.wait()
-            cpt.unsubscribe(cid)
+        _drain_queues(need_draining)
 
         # check that all quesue really are at 0
         for cpt in plugins.values():
@@ -147,6 +138,28 @@ class DetectorBase(ADBase):
         # re-enable the enabled callbacks starting from bottom
 
         return ret
+
+
+def _drain_queues(plugins_to_drain, st=None):
+    from threading import Event
+
+    drain_events = {}
+    for cpt in plugins_to_drain:
+        ev = Event()
+        cid = cpt.queue_use.subscribe(
+            lambda value, _evt=ev, **kwargs:
+            ev.set()
+            if value == 0 else None)
+
+        drain_events[ev] = (cid, cpt)
+
+    # wait for all queues to drain to 0
+    for ev, (cid, cpt) in drain_events.items():
+        ev.wait()
+        cpt.unsubscribe(cid)
+
+    if st is not None:
+        st._finished()
 
 
 class AreaDetector(DetectorBase):
