@@ -375,8 +375,12 @@ def test_fshdf_plugin(root, wpath, rpath, check_files, WriterClass):
 
     det.stage()
     st = det.trigger()
+    count = 0
     while not st.done:
         time.sleep(.1)
+        count += 1
+        if count > 10:
+            raise Exception("timedout")
     reading = det.read()
     det.describe()
     det.unstage()
