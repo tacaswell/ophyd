@@ -188,7 +188,7 @@ class PseudoPosTests(unittest.TestCase):
     def test_multi_concurrent(self):
         def done(**kwargs):
             logger.debug('** Finished moving (%s)', kwargs)
-
+        print("0")
         pseudo = Pseudo3x3('', name='mypseudo', concurrent=True,
                            settle_time=0.1, timeout=25.0)
         self.assertIs(pseudo.sequential, False)
@@ -196,29 +196,29 @@ class PseudoPosTests(unittest.TestCase):
         self.assertEqual(pseudo.settle_time, 0.1)
         self.assertEqual(pseudo.timeout, 25.0)
         pseudo.wait_for_connection()
-
+        print("1")
         self.assertTrue(pseudo.connected)
         self.assertEqual(tuple(pseudo.pseudo_positioners),
                          (pseudo.pseudo1, pseudo.pseudo2, pseudo.pseudo3))
         self.assertEqual(tuple(pseudo.real_positioners),
                          (pseudo.real1, pseudo.real2, pseudo.real3))
-
+        print("2")
         logger.info('Move to (.2, .2, .2), which is (-.2, -.2, -.2) for real '
                     'motors')
         pseudo.set(pseudo.PseudoPosition(.2, .2, .2), wait=True)
         logger.info('Position is: %s (moving=%s)', pseudo.position,
                     pseudo.moving)
-
+        print("3")
         pseudo.check_value((2, 2, 2))
         pseudo.check_value(pseudo.PseudoPosition(2, 2, 2))
         try:
             pseudo.check_value((2, 2, 2, 3))
         except ValueError as ex:
             logger.info('Check value failed, as expected (%s)', ex)
-
+        print("4")
         real1 = pseudo.real1
         pseudo1 = pseudo.pseudo1
-
+        print("5")
         try:
             pseudo.check_value((real1.high_limit + 1, 2, 2))
         except ValueError as ex:
@@ -229,18 +229,18 @@ class PseudoPosTests(unittest.TestCase):
         while not ret.done:
             logger.info('Pos=%s %s (err=%s)', pseudo.position, ret, ret.error)
             time.sleep(0.1)
-
+        print("6")
         logger.info('Single pseudo axis: %s', pseudo1)
 
-        pseudo1.set(0, wait=True)
-
+        pseudo1.set(0, wait=True, timeout=5)
+        print("7")
         self.assertEquals(pseudo1.target, 0)
         pseudo1.sync()
         self.assertEquals(pseudo1.target, pseudo1.position)
-
+        print("8")
         # coverage
         pseudo1._started_moving
-
+        print("9")
         try:
             pseudo1.check_value(real1.high_limit + 1)
         except ValueError as ex:
@@ -248,13 +248,13 @@ class PseudoPosTests(unittest.TestCase):
 
         logger.info('Move pseudo1 to 0, position=%s', pseudo.position)
         logger.info('pseudo1 = %s', pseudo1.position)
-
+        print("10")
         def single_sub(**kwargs):
             # logger.info('Single sub: %s', kwargs)
             pass
 
         pseudo1.subscribe(single_sub, pseudo1.SUB_READBACK)
-
+        print("11")
         ret = pseudo1.set(1, wait=False)
         self.assertEqual(pseudo.timeout, ret.timeout)
         while not ret.done:
@@ -264,20 +264,21 @@ class PseudoPosTests(unittest.TestCase):
 
         logger.info('pseudo1.pos=%s Pos=%s %s (err=%s)', pseudo1.position,
                     pseudo.position, ret, ret.error)
-
+        print("12")
         copy(pseudo)
         pseudo.read()
         pseudo.describe()
         pseudo.read_configuration()
         pseudo.describe_configuration()
-
+        print("13")
         repr(pseudo)
         str(pseudo)
-
+        print("14")
         pseudo.pseudo1.read()
         pseudo.pseudo1.describe()
         pseudo.pseudo1.read_configuration()
         pseudo.pseudo1.describe_configuration()
+        print("15")
 
     def test_single_pseudo(self):
         logger.info('------- Sequential, single pseudo positioner')

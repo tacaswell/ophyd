@@ -152,8 +152,9 @@ class EpicsMotor(Device, PositionerBase):
         self._started_moving = False
 
         status = super().move(position, **kwargs)
+        print('     about to set motor setpoint')
         self.user_setpoint.put(position, wait=False)
-
+        print('     set motor setpoint')
         try:
             if wait:
                 status_wait(status)

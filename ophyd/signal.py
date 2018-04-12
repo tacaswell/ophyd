@@ -479,7 +479,9 @@ class EpicsSignalBase(Signal):
     @raise_if_disconnected
     def timestamp(self):
         '''Timestamp of readback PV, according to EPICS'''
+        print('trying to get lock')
         with self._lock:
+            print('got lock')
             if not self._read_pv.auto_monitor:
                 # force updating the timestamp when not using auto monitoring
                 self._read_pv.get_timevars()
@@ -897,10 +899,14 @@ class EpicsSignal(EpicsSignalBase):
         if self._read_pv is self._write_pv:
             # readback and setpoint PV are one in the same, so update the
             # readback as well
-            super().put(value, timestamp=time.time(), force=True)
+            ts = time.time()
+            super().put(value, timestamp=ts, force=True)
+            print(' about to run subs')
+            print(f'   {self._callbacks}')
             self._run_subs(sub_type=self.SUB_SETPOINT,
                            old_value=old_value, value=value,
-                           timestamp=self.timestamp, **kwargs)
+                           timestamp=ts, **kwargs)
+            print(' subs done')
 
     def set(self, value, *, timeout=None, settle_time=None):
         '''Set is like `EpicsSignal.put`, but is here for bluesky compatibility
