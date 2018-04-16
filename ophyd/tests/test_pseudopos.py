@@ -225,8 +225,12 @@ class PseudoPosTests(unittest.TestCase):
 
         ret = pseudo.set((2, 2, 2), wait=False, moved_cb=done)
         self.assertEqual(ret.settle_time, 0.1)
+        count = 0
         while not ret.done:
             logger.info('Pos=%s %s (err=%s)', pseudo.position, ret, ret.error)
+            count += 1
+            if count > 15:
+                raise Exception
             time.sleep(0.1)
         print("6")
         logger.info('Single pseudo axis: %s', pseudo1)
@@ -248,6 +252,7 @@ class PseudoPosTests(unittest.TestCase):
         logger.info('Move pseudo1 to 0, position=%s', pseudo.position)
         logger.info('pseudo1 = %s', pseudo1.position)
         print("10")
+
         def single_sub(**kwargs):
             # logger.info('Single sub: %s', kwargs)
             pass
@@ -256,9 +261,13 @@ class PseudoPosTests(unittest.TestCase):
         print("11")
         ret = pseudo1.set(1, wait=False)
         self.assertEqual(pseudo.timeout, ret.timeout)
+        count = 0
         while not ret.done:
             logger.info('pseudo1.pos=%s Pos=%s %s (err=%s)', pseudo1.position,
                         pseudo.position, ret, ret.error)
+            count += 1
+            if count > 150:
+                raise Exception
             time.sleep(0.1)
 
         logger.info('pseudo1.pos=%s Pos=%s %s (err=%s)', pseudo1.position,
