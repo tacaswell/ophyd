@@ -120,7 +120,6 @@ class PseudoPosTests(unittest.TestCase):
         self.assertRaises(ValueError, pseudo.to_pseudo_tuple, 1, pseudo1=1,
                           pseudo2=2, pseudo3=3)
 
-    @pytest.mark.skip(reason="fails with caproto")
     def test_multi_sequential(self):
         pseudo = Pseudo3x3('', name='mypseudo', concurrent=False)
         pseudo.wait_for_connection()
@@ -145,7 +144,6 @@ class PseudoPosTests(unittest.TestCase):
         pos1 = pseudo.PseudoPosition(pseudo1=.1, pseudo2=.2, pseudo3=.3)
         pseudo.set(pos1, wait=True)
         print('moved to', pseudo.position)
-
         pseudo.real1.set(0, wait=True)
         pseudo.real2.set(0, wait=True)
         pseudo.real3.set(0, wait=True)
@@ -186,7 +184,6 @@ class PseudoPosTests(unittest.TestCase):
 
         self.assertEqual(pseudo.read().keys(), pseudo.describe().keys())
 
-    @pytest.mark.skip(reason="fails with caproto")
     def test_multi_concurrent(self):
         def done(**kwargs):
             logger.debug('** Finished moving (%s)', kwargs)
@@ -282,7 +279,6 @@ class PseudoPosTests(unittest.TestCase):
         pseudo.pseudo1.describe_configuration()
         print("15")
 
-    @pytest.mark.skip(reason="fails with caproto")
     def test_single_pseudo(self):
         logger.info('------- Sequential, single pseudo positioner')
         pos = Pseudo1x3('', name='mypseudo', concurrent=False)
