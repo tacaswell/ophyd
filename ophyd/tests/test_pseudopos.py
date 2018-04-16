@@ -229,7 +229,7 @@ class PseudoPosTests(unittest.TestCase):
         while not ret.done:
             logger.info('Pos=%s %s (err=%s)', pseudo.position, ret, ret.error)
             count += 1
-            if count > 15:
+            if count > 1000:
                 raise Exception
             time.sleep(0.1)
         print("6")
