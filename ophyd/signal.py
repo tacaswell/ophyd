@@ -901,12 +901,9 @@ class EpicsSignal(EpicsSignalBase):
             # readback as well
             ts = time.time()
             super().put(value, timestamp=ts, force=True)
-            print(' about to run subs')
-            print(f'   {self._callbacks}')
             self._run_subs(sub_type=self.SUB_SETPOINT,
                            old_value=old_value, value=value,
                            timestamp=ts, **kwargs)
-            print(' subs done')
 
     def set(self, value, *, timeout=None, settle_time=None):
         '''Set is like `EpicsSignal.put`, but is here for bluesky compatibility
