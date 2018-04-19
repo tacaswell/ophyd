@@ -395,3 +395,25 @@ def test_fshdf_plugin(root, wpath, rpath, check_files):
         for fn in handler.get_file_list(datum['datum_kwargs'] for datum in
                                         fs.datum_by_resource[res_uid]):
             assert Path(fn).exists()
+
+
+def test_many_connect():
+    fs = DummyFS()
+
+    class FS_hdf(HDF5Plugin, FileStoreHDF5,
+                 FileStoreIterativeWrite):
+        pass
+
+    class MyDetector(SingleTrigger, SimDetector):
+        hdf1 = Cpt(FS_hdf, 'HDF1:',
+                   write_path_template='',
+                   read_path_template='',
+                   root='/', reg=fs)
+
+    def tester():
+        det = MyDetector(prefix, name='det')
+        del det
+
+    for j in range(50):
+        print(j)
+        tester()
