@@ -479,9 +479,7 @@ class EpicsSignalBase(Signal):
     @raise_if_disconnected
     def timestamp(self):
         '''Timestamp of readback PV, according to EPICS'''
-        print('trying to get lock')
         with self._lock:
-            print('got lock')
             if not self._read_pv.auto_monitor:
                 # force updating the timestamp when not using auto monitoring
                 self._read_pv.get_timevars()
