@@ -296,8 +296,6 @@ def test_default_configuration_attrs(plugin):
                           (Component, DynamicDeviceComponent))
 
 
-@pytest.mark.parametrize('WriterClass', (FileStoreIterativeWrite,
-                                         ))
 @pytest.mark.parametrize('root,wpath,rpath,check_files',
                          ((None, '/data/%Y/%m/%d', None, False),
                           (None, '/data/%Y/%m/%d', None, False),
@@ -306,13 +304,13 @@ def test_default_configuration_attrs(plugin):
                           ('/', '/data/%Y/%m/%d', None, False),
                           ('/tmp/data', '/data/%Y/%m/%d', '%Y/%m/%d', True)
                           ))
-def test_fstiff_plugin(root, wpath, rpath, check_files, WriterClass):
+def test_fstiff_plugin(root, wpath, rpath, check_files):
     fs = DummyFS()
     if check_files:
         fh = pytest.importorskip('databroker.assets.handlers')
 
     class FS_tiff(TIFFPlugin, FileStoreTIFF,
-                  WriterClass):
+                  FileStoreIterativeWrite):
         pass
 
     class MyDetector(SingleTrigger, SimDetector):
@@ -347,8 +345,6 @@ def test_fstiff_plugin(root, wpath, rpath, check_files, WriterClass):
             assert Path(fn).exists()
 
 
-@pytest.mark.parametrize('WriterClass', (FileStoreIterativeWrite,
-                                         ))
 @pytest.mark.parametrize('root,wpath,rpath,check_files',
                          ((None, '/data/%Y/%m/%d', None, False),
                           (None, '/data/%Y/%m/%d', None, False),
@@ -357,11 +353,13 @@ def test_fstiff_plugin(root, wpath, rpath, check_files, WriterClass):
                           ('/', '/data/%Y/%m/%d', None, False),
                           ('/tmp/data', '/data/%Y/%m/%d', '%Y/%m/%d', True)
                           ))
-def test_fshdf_plugin(root, wpath, rpath, check_files, WriterClass):
+def test_fshdf_plugin(root, wpath, rpath, check_files):
     fs = DummyFS()
+    if check_files:
+        fh = pytest.importorskip('databroker.assets.handlers')
 
     class FS_hdf(HDF5Plugin, FileStoreHDF5,
-                 WriterClass):
+                 FileStoreIterativeWrite):
         pass
 
     class MyDetector(SingleTrigger, SimDetector):
