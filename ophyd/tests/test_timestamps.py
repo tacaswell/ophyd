@@ -15,7 +15,7 @@ def tearDownModule():
     logger.debug('Cleaning up')
 
 
-class EpicsSignalTests:
+class TestEpicsSignal:
     def test_read_pv_timestamp_no_monitor(self):
         mtr = EpicsMotor(config.motor_recs[0], name='test')
         mtr.wait_for_connection()

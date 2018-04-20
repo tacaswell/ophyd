@@ -6,7 +6,7 @@ from ophyd import EpicsSignal
 logger = logging.getLogger(__name__)
 
 
-class TimeoutTests:
+class TestTimeout:
     def test_timeout(self):
         class SubSubDevice(Device):
             cpt5 = Component(EpicsSignal, '5')

@@ -42,7 +42,7 @@ def test_device_state():
     d.unstage()
 
 
-class DeviceTests:
+class TestDevice:
     def test_attrs(self):
         class MyDevice(Device):
             cpt1 = Component(FakeSignal, '1')

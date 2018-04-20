@@ -21,7 +21,7 @@ def tearDownModule():
     logger.setLevel(logging.INFO)
 
 
-class PVPosTest:
+class TestPVPos:
     sim_pv = 'XF:31IDA-OP{Tbl-Ax:X1}Mtr'
 
     fake_motor = {'readback': 'XF:31IDA-OP{Tbl-Ax:FakeMtr}-I',

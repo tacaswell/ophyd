@@ -11,15 +11,7 @@ from ophyd.utils import (make_dir_tree, makedirs)
 logger = logging.getLogger(__name__)
 
 
-def setUpModule():
-    pass
-
-
-def tearDownModule():
-    pass
-
-
-class EpicsUtilTest:
+class TestEpicsUtil:
     def test_split(self):
         utils = epics_utils
 
