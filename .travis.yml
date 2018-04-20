@@ -28,10 +28,8 @@ matrix:
       env: BUILD_DOCS=true CONDA_ENV=1
     - python: 3.6
       env: EPICS_DEB_DIST="jessie/staging"
-    - python: 3.6
-      env: OPHYD_CONTROL_LAYER=caproto EPICS_DEB_DIST="jessie/staging"
     - python: nightly
-      env: OPHYD_CONTROL_LAYER=caproto EPICS_DEB_DIST="jessie/staging"
+      env: EPICS_DEB_DIST="jessie/staging"
 
 before_install:
   - export DOCKER0_IP=$(/sbin/ifconfig docker0 |grep 'inet addr' | sed -e 's/.*addr:\([^ ]*\).*/\1/')
