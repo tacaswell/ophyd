@@ -1,6 +1,5 @@
 import time
 import logging
-import unittest
 from copy import copy
 
 from ophyd import (PVPositioner, PVPositionerPC, EpicsMotor)
@@ -22,7 +21,7 @@ def tearDownModule():
     logger.setLevel(logging.INFO)
 
 
-class PVPosTest(unittest.TestCase):
+class PVPosTest:
     sim_pv = 'XF:31IDA-OP{Tbl-Ax:X1}Mtr'
 
     fake_motor = {'readback': 'XF:31IDA-OP{Tbl-Ax:FakeMtr}-I',

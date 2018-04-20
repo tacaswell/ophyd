@@ -1,5 +1,4 @@
 import logging
-import unittest
 import pytest
 
 import numpy as np
@@ -43,7 +42,7 @@ def test_device_state():
     d.unstage()
 
 
-class DeviceTests(unittest.TestCase):
+class DeviceTests:
     def test_attrs(self):
         class MyDevice(Device):
             cpt1 = Component(FakeSignal, '1')

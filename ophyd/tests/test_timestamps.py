@@ -1,6 +1,5 @@
 import time
 import logging
-import unittest
 
 from ophyd import (EpicsSignal, EpicsSignalRO, EpicsMotor)
 
@@ -16,7 +15,7 @@ def tearDownModule():
     logger.debug('Cleaning up')
 
 
-class EpicsSignalTests(unittest.TestCase):
+class EpicsSignalTests:
     def test_read_pv_timestamp_no_monitor(self):
         mtr = EpicsMotor(config.motor_recs[0], name='test')
         mtr.wait_for_connection()

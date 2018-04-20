@@ -1,15 +1,12 @@
-import time
 import logging
-import unittest
+from ophyd import (Device, Component)
 
-from ophyd import (Device, Component, FormattedComponent)
-from ophyd.signal import Signal
 from ophyd import EpicsSignal
 
 logger = logging.getLogger(__name__)
 
 
-class TimeoutTests(unittest.TestCase):
+class TimeoutTests:
     def test_timeout(self):
         class SubSubDevice(Device):
             cpt5 = Component(EpicsSignal, '5')

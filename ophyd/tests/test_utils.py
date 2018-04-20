@@ -1,7 +1,6 @@
 import pytest
 import os
 import logging
-import unittest
 import numpy as np
 import tempfile
 
@@ -20,7 +19,7 @@ def tearDownModule():
     pass
 
 
-class EpicsUtilTest(unittest.TestCase):
+class EpicsUtilTest:
     def test_split(self):
         utils = epics_utils
 
