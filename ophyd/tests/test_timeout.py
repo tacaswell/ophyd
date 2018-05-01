@@ -25,7 +25,7 @@ def test_timeout():
     with pytest.raises(TimeoutError) as cm:
         device.wait_for_connection(timeout=1e-6)
 
-    ex_msg = str(cm.exception)
+    ex_msg = str(cm.value)
     assert 'dev.sub1' in ex_msg
     assert 'dev.sub2.cpt4' in ex_msg
     assert 'dev.sub2.subsub1.cpt5' in ex_msg

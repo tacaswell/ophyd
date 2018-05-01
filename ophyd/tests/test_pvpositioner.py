@@ -6,6 +6,7 @@ from ophyd import (PVPositioner, PVPositionerPC, EpicsMotor)
 from ophyd import (EpicsSignal, EpicsSignalRO)
 from ophyd import (Component as C)
 from ophyd import get_cl
+from .conftest import AssertTools
 
 logger = logging.getLogger(__name__)
 
@@ -21,8 +22,9 @@ def tearDownModule():
     logger.setLevel(logging.INFO)
 
 
-class TestPVPos:
+class TestPVPos(AssertTools):
     sim_pv = 'XF:31IDA-OP{Tbl-Ax:X1}Mtr'
+    # sim_pv = 'sim:mtr1'
 
     fake_motor = {'readback': 'XF:31IDA-OP{Tbl-Ax:FakeMtr}-I',
                   'setpoint': 'XF:31IDA-OP{Tbl-Ax:FakeMtr}-SP',

@@ -6,17 +6,17 @@ import tempfile
 
 from ophyd.utils import epics_pvs as epics_utils
 from ophyd.utils import (make_dir_tree, makedirs)
+from .conftest import AssertTools
 
 
 logger = logging.getLogger(__name__)
 
 
-class TestEpicsUtil:
+class TestEpicsUtil(AssertTools):
     def test_split(self):
         utils = epics_utils
 
-        self.assertEquals(utils.split_record_field('record.field'),
-                          ('record', 'field'))
+        assert utils.split_record_field('record.field') == ('record', 'field')
         self.assertEquals(utils.split_record_field('record.field.invalid'),
                           ('record.field', 'invalid'))
         self.assertEquals(utils.strip_field('record.field'), 'record')

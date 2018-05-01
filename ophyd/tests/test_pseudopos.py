@@ -13,7 +13,7 @@ from ophyd.pseudopos import (PseudoPositioner, PseudoSingle)
 
 from ophyd import (Component as C)
 from ophyd.utils import ExceptionBundle
-
+from .conftest import AssertTools
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class FaultyPseudo1x3(Pseudo1x3):
     real1 = C(FaultyStopperEpicsMotor, motor_recs[0])
 
 
-class PseudoPosTests:
+class TestPseudoPos(AssertTools):
     def test_onlypseudo(self):
         # can't instantiate it on its own
         self.assertRaises(TypeError, PseudoPositioner, 'prefix')
