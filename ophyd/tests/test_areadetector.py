@@ -398,6 +398,7 @@ def test_fshdf_plugin(root, wpath, rpath, check_files):
 
 
 def test_many_connect():
+    import gc
     fs = DummyFS()
 
     class FS_hdf(HDF5Plugin, FileStoreHDF5,
@@ -412,7 +413,13 @@ def test_many_connect():
 
     def tester():
         det = MyDetector(prefix, name='det')
+        try:
+            det.cam.acquire._read_pv._caproto_pv.circuit_manager._disconnected()
+        except AttributeError:
+            # must be pyepics
+            pass
         del det
+        gc.collect()
 
     for j in range(50):
         print(j)
