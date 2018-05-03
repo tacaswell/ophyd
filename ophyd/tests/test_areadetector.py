@@ -378,7 +378,7 @@ def test_fshdf_plugin(root, wpath, rpath, check_files):
     while not st.done:
         time.sleep(.1)
         count += 1
-        if count > 1000:
+        if count > 20:
             raise Exception("timedout")
     reading = det.read()
     det.describe()
@@ -413,8 +413,12 @@ def test_many_connect():
 
     def tester():
         det = MyDetector(prefix, name='det')
+        print('made detector')
         try:
+            print('about to murder socket')
             det.cam.acquire._read_pv._caproto_pv.circuit_manager._disconnected()
+            print('murdered socket')
+            time.sleep(1)
         except AttributeError:
             # must be pyepics
             pass
