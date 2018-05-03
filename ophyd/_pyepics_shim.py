@@ -4,7 +4,8 @@ import epics
 import queue
 import threading
 import warnings
-
+import logging
+logging.basicConfig(format='%(asctime)s %(message)s')
 from epics import get_pv as _get_pv, caget, caget, caput
 
 try:
