@@ -376,10 +376,10 @@ class EpicsSignalBase(Signal):
         self._read_pv = cl.get_pv(read_pv, form=cl.pv_form,
                                   auto_monitor=auto_monitor,
                                   **pv_kw)
-
-        with self._lock:
-            self._read_pv.add_callback(self._read_changed,
-                                       run_now=self._read_pv.connected)
+        if self._auto_monitor:
+            with self._lock:
+                self._read_pv.add_callback(self._read_changed,
+                                           run_now=self._read_pv.connected)
 
     @property
     def as_string(self):
