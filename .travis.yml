@@ -97,7 +97,7 @@ script:
 
 
   # running tests
-  - python run_tests.py -v --cov=ophyd --cov-report term-missing --log-format="%(asctime)s,%(msecs)03d %(levelname)s (%(threadName)s) %(message)s" --log-date-format="%H:%M:%S"
+  - python run_tests.py -v --cov=ophyd --cov-report term-missing
 
   - set -e
   # Build docs.
