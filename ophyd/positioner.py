@@ -30,7 +30,7 @@ class PositionerBase(OphydObject):
     _default_sub = SUB_READBACK
 
     def __init__(self, *, name=None, parent=None, settle_time=0.0,
-                 timeout=None, **kwargs):
+                 timeout=5, **kwargs):
         super().__init__(name=name, parent=parent, **kwargs)
 
         self._started_moving = False
