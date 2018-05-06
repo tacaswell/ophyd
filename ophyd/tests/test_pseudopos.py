@@ -265,7 +265,7 @@ class TestPseudoPos(AssertTools):
             logger.info('pseudo1.pos=%s Pos=%s %s (err=%s)', pseudo1.position,
                         pseudo.position, ret, ret.error)
             count += 1
-            if count > 150:
+            if count > 20:
                 raise Exception
             time.sleep(0.1)
 
