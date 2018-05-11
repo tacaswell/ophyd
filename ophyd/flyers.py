@@ -161,7 +161,8 @@ class AreaDetectorTimeseriesCollector(Device):
 
     def describe_collect(self):
         '''Describe details for the flyer collect() method'''
-        desc = self._describe_attr_list(['waveform', 'waveform_ts'])
+        desc = self._recursive_accumulate(['waveform', 'waveform_ts'],
+                                          'describe')
         return {self.stream_name: desc}
 
 
@@ -246,7 +247,7 @@ class WaveformCollector(Device):
 
     def describe_collect(self):
         '''Describe details for the flyer collect() method'''
-        desc = self._describe_attr_list(['waveform'])
+        desc = self._recursive_accumulate(['waveform'], 'describe')
         return {self.stream_name: desc}
 
 
@@ -338,7 +339,7 @@ class MonitorFlyerMixin(BlueskyInterface):
 
     def _describe_with_dtype(self, attr, *, dtype='array'):
         '''Describe an attribute and change its dtype'''
-        desc = self._describe_attr_list([attr])
+        desc = self._recursive_accumulate([attr], 'describe')
 
         obj = getattr(self, attr)
         desc[obj.name]['dtype'] = dtype
@@ -348,7 +349,7 @@ class MonitorFlyerMixin(BlueskyInterface):
         '''Description of monitored attributes retrieved by collect'''
         if self._pivot:
             return {self._get_stream_name(attr):
-                    self._describe_attr_list([attr])
+                    self._recursive_accumulate([attr], 'describe')
                     for attr in self.monitor_attrs
                     }
         else:

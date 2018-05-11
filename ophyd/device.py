@@ -316,7 +316,7 @@ class DynamicDeviceComponent:
 
         clsdict = OrderedDict(
             __doc__=docstring,
-            _default_read_attrs=self.default_read_attrs or (), 
+            _default_read_attrs=self.default_read_attrs or (),
             _default_configuration_attrs=\
                 self.default_configuration_attrs or ())
 
@@ -906,22 +906,17 @@ class Device(BlueskyInterface, OphydObject, metaclass=ComponentMeta):
 
         return attr
 
-    def _read_attr_list(self, attr_list, *, config=False):
-        '''Get a 'read' dictionary containing attributes in attr_list'''
+    def _recursive_accumulate(self, attr_list, meth_name):
         values = OrderedDict()
         for attr in attr_list:
             obj = getattr(self, attr)
-            if config:
-                values.update(obj.read_configuration())
-            else:
-                values.update(obj.read())
-
+            values.update(getattr(obj, meth_name)())
         return values
 
     @doc_annotation_forwarder(BlueskyInterface)
     def read(self):
         res = super().read()
-        res.update(self._read_attr_list(self.read_attrs))
+        res.update(self._recursive_accumulate(self.read_attrs, 'read'))
         return res
 
     def read_configuration(self) -> OrderedDictType[str, Dict[str, Any]]:
@@ -931,24 +926,14 @@ class Device(BlueskyInterface, OphydObject, metaclass=ComponentMeta):
         To control which fields are included, adjust the
         ``configuration_attrs`` list.
         """
-        return self._read_attr_list(self.configuration_attrs, config=True)
-
-    def _describe_attr_list(self, attr_list, *, config=False):
-        '''Get a 'describe' dictionary containing attributes in attr_list'''
-        desc = OrderedDict()
-        for attr in attr_list:
-            obj = getattr(self, attr)
-            if config:
-                desc.update(obj.describe_configuration())
-            else:
-                desc.update(obj.describe())
-
-        return desc
+        return self._recursive_accumulate(self.configuration_attrs,
+                                          'read_configuration')
 
     @doc_annotation_forwarder(BlueskyInterface)
     def describe(self):
         res = super().describe()
-        res.update(self._describe_attr_list(self.read_attrs))
+        res.update(self._recursive_accumulate(self.read_attrs,
+                                              'describe'))
         return res
 
     def describe_configuration(self) -> OrderedDictType[str, Dict[str, Any]]:
@@ -966,7 +951,8 @@ class Device(BlueskyInterface, OphydObject, metaclass=ComponentMeta):
             The keys must be strings and the values must be dict-like
             with the ``event_model.event_descriptor.data_key`` schema.
         """
-        return self._describe_attr_list(self.configuration_attrs, config=True)
+        return self._recursive_accumulate(self.configuration_attrs,
+                                          'describe_configuration')
 
     @property
     def trigger_signals(self):
