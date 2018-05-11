@@ -910,6 +910,13 @@ class Device(BlueskyInterface, OphydObject, metaclass=ComponentMeta):
         values = OrderedDict()
         for attr in attr_list:
             obj = getattr(self, attr)
+            if obj not in self:
+                raise RuntimeError(
+                    "Your ophyd Device is set up incorrectly. "
+                    "You are trying to access the attribute {attr} from "
+                    "which gives {obj} which is not a child of "
+                    "{self}".format(obj=obj, attr=attr, self=self))
+
             values.update(getattr(obj, meth_name)())
         return values
 
