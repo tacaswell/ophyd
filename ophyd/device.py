@@ -1120,3 +1120,13 @@ class Device(BlueskyInterface, OphydObject, metaclass=ComponentMeta):
 
         yield ('read_attrs', self.read_attrs)
         yield ('configuration_attrs', self.configuration_attrs)
+
+    def __contains__(self, other):
+        while True:
+            if other is self:
+                return True
+            elif other is None:
+                break
+            else:
+                other = other.parent
+        return False
