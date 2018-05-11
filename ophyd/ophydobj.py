@@ -45,6 +45,7 @@ class OphydObject:
             name = ''
         self._name = name
         self._parent = parent
+        self._root = None
 
         self.subscriptions = {getattr(self, k)
                               for k in dir(type(self))
@@ -99,11 +100,15 @@ class OphydObject:
     @property
     def root(self):
         "Walk parents to find ultimate ancestor (parent's parent...)."
-        root = self
-        while True:
-            if root.parent is None:
-                return root
-            root = root.parent
+        if self._root is None:
+            root = self
+            while True:
+                if root.parent is None:
+                    return root
+                root = root.parent
+            self._root = root
+        return self._root
+
 
     @property
     def report(self):
