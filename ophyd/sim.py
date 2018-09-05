@@ -797,7 +797,7 @@ class InvariantSignal(SynSignal):
         return res
 
     def __repr__(self):
-        return "<INVARIANT REPR>"
+        return "<INVARIANT {name}>".format(name=self.name)
 
 
 class SPseudo3x3(PseudoPositioner):
