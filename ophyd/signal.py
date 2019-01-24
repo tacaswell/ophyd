@@ -805,6 +805,7 @@ class EpicsSignalBase(Signal):
             as_string = self._string
 
         self.wait_for_connection(timeout=connection_timeout)
+        kwargs['timeout'] = 10
         info = self._read_pv.get_with_metadata(as_string=as_string, **kwargs)
 
         if info is None:
@@ -1258,7 +1259,7 @@ class EpicsSignal(EpicsSignalBase):
 
         if not self.write_access:
             raise ReadOnlyError('No write access to underlying EPICS PV')
-
+        kwargs['timeout'] = 10
         self._write_pv.put(value, use_complete=use_complete, callback=callback,
                            **kwargs)
 
