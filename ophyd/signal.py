@@ -117,6 +117,14 @@ class Signal(OphydObject):
         pass
 
     @property
+    def inc_setpoint(self):
+        return self._inc_setpoint
+
+    @inc_setpoint.setter
+    def inc_setpoint(self, value):
+        self._inc_setpoint = bool(value)
+
+    @property
     def metadata_keys(self):
         'Metadata keys that will be passed along on value subscriptions'
         return tuple(self._metadata_keys)
@@ -1016,6 +1024,8 @@ class EpicsSignal(EpicsSignalBase):
         self._put_complete = put_complete
         self._setpoint = None
 
+        self._inc_setpoint = False
+
         metadata = dict(
             setpoint_timestamp=None,
             setpoint_status=None,
@@ -1387,6 +1397,33 @@ class EpicsSignal(EpicsSignalBase):
             self.cl.release_pvs(self._write_pv)
             self._write_pv = None
 
+    @raise_if_disconnected
+    def read(self):
+        '''Put the status of the signal into a simple dictionary format
+        for data acquisition
+
+        Returns
+        -------
+            dict
+        '''
+        ret = super().read()
+        if self._inc_setpoint:
+            value = self.setpoint
+            ts = self.setpoint_ts
+            ret[self.name + '_sp'] = {'value': value,
+                                      'timestamp': ts}
+        return ret
+
+    def describe(self):
+        ret = super().describe()
+        if self._inc_setpoint:
+            val = self.setpoint
+            ret.update({self.name + '_sp':
+                        {'source': self.setpoint_pvname,
+                         'dtype': data_type(val),
+                         'shape': data_shape(val)}})
+
+        return ret
 
 class AttributeSignal(Signal):
     '''Signal derived from a Python object instance's attribute
