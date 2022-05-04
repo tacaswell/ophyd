@@ -1426,12 +1426,12 @@ class Device(BlueskyInterface, OphydObject):
         new = self.read_configuration()
         return old, new
 
-    def _repr_info(self):
+    def _repr_info(self, trim=False):
         yield ('prefix', self.prefix)
-        yield from super()._repr_info()
-
-        yield ('read_attrs', self.read_attrs)
-        yield ('configuration_attrs', self.configuration_attrs)
+        yield from super()._repr_info(trim=trim)
+        if not trim:
+            yield ('read_attrs', self.read_attrs)
+            yield ('configuration_attrs', self.configuration_attrs)
 
     class OphydAttrList(MutableSequence):
         """list proxy to migrate away from Device.read_attrs and Device.config_attrs

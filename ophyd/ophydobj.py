@@ -6,6 +6,7 @@ from enum import IntFlag
 from itertools import count
 from logging import LoggerAdapter, getLogger
 
+import warnings
 
 from .log import control_layer_logger
 
@@ -556,11 +557,18 @@ class OphydObject:
         pass
 
     def __repr__(self):
-        info = self._repr_info()
-        info = ', '.join('{}={!r}'.format(key, value) for key, value in info)
-        return '{}({})'.format(self.__class__.__name__, info)
+        try:
+            info = self._repr_info(trim=True)
+        except TypeError:
+            warnings.warn(f'{self.__class__.__name__} does not yet '
+                          'support the trim keyword argument, '
+                          'this will raise in the future.',
+                          stacklevel=2)
 
-    def _repr_info(self):
+        info = ', '.join(f'{key}={value!r}' for key, value in info)
+        return f'{self.__class__.__name__}({info})'
+
+    def _repr_info(self, trim=False):
         'Yields pairs of (key, value) to generate the object repr'
         if self.name is not None:
             yield ('name', self.name)
