@@ -806,5 +806,5 @@ def test_signal_dtype_shape_info(fake_motor_ioc, cleanup):
 
 
 def test_signal_default_type():
-    s = Signal('aardvark')
+    s = Signal(name="aardvark")
     assert type(s.read()['aardvark']['value']) is float
